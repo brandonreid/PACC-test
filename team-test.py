@@ -1,6 +1,6 @@
 import time
-from prefect import task, flow
-from prefect.artifacts import create_markdown_artifact, pause_flow_run
+from prefect import task, flow, pause_flow_run
+from prefect.artifacts import create_markdown_artifact
 
 @task(name="Get directory")
 def get_directory():
