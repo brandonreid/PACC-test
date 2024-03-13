@@ -1,6 +1,7 @@
 import time
 from prefect import task, flow, pause_flow_run, runtime
 from prefect.artifacts import create_markdown_artifact
+from prefect.blocks.core import Block
 
 @task(name="Get directory")
 def get_directory():
@@ -99,7 +100,10 @@ def cleanup(num, num2):
     time.sleep(4)
     return 1 + num + num2
 
-@flow(name="Nice flow with artifact", )
+def on_completed_run():
+    Block.load('test-email-party-block').notify()
+
+@flow(name="Nice flow with artifact", on_completion=[on_completed_run])
 def release_package():
     directory = get_directory.submit()
     repo = clone_repo.submit(directory)
