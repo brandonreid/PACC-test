@@ -110,6 +110,7 @@ def release_package():
     send_notifications.submit(directory, release)
     cleanup.submit(directory, release)
     flow_name = runtime.flow_run.name
+    deployment_name = runtime.deployment.name
     name = pause_flow_run(str)
     markdown_content = f"""
     # Example Flow Run Level Markdown Artifact
@@ -121,6 +122,9 @@ def release_package():
 
     ## The flow name was:
     {flow_name}
+
+    ## The deployment name was:
+    {deployment_name}
     """
     create_markdown_artifact(
         key="cleanup-flow-artifact",
