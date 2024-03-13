@@ -1,5 +1,5 @@
 import time
-from prefect import task, flow, pause_flow_run
+from prefect import task, flow, pause_flow_run, prefect_runtime
 from prefect.artifacts import create_markdown_artifact
 
 @task(name="Get directory")
@@ -109,6 +109,7 @@ def release_package():
     release = release_latest.submit(directory, app, publish)
     send_notifications.submit(directory, release)
     cleanup.submit(directory, release)
+    flow_name = prefect_runtime.flow_name
     name = pause_flow_run(str)
     markdown_content = f"""
     # Example Flow Run Level Markdown Artifact
@@ -117,6 +118,9 @@ def release_package():
 
     ## The name was:
     {name}
+
+    ## The flow name was:
+    {flow_name}
     """
     create_markdown_artifact(
         key="cleanup-flow-artifact",
